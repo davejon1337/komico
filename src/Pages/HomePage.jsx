@@ -117,10 +117,18 @@ const MovieCard = styled.div`
   background-size : cover;
   display : inline-block;
   margin-right   : 15px;
+  transition : all 0.5s ease-in-out;
+
+  &:hover {
+   transform : scale(1.3);
+    }
+
+  
 `;
 
 const NavigationButtonLeft = styled.i`
   position: absolute;
+  height: 65%;
   top: 45%;
   left: 0;
   cursor: pointer;
