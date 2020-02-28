@@ -1,14 +1,13 @@
-import React from 'react';
-import './App.scss';
-import Navbar from './Components/Navbar';
+import React from "react";
+import "./App.scss";
+import Navbar from "./Components/Navbar";
+import Router from "./Router";
 
 function App() {
   return (
     <div className="App">
       <Navbar></Navbar>
-      <div style={{ marginTop: '70px' }}>
-        dsads
-      </div>
+      <Router />
     </div>
   );
 }
