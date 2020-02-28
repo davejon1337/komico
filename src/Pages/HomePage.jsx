@@ -14,18 +14,30 @@ const Hero = styled.div`
 
 const Content = styled.div`
   padding-top: 40px;
+  padding-left: 50px;
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+`;
+
+const StudioImage = styled.div`
+  height: 300px;
+  width: 250px;
+  background-image : url('${props => props.src}');
+  background-size: cover;
+  background-position : center center;
 `;
 
 export default function HomePage() {
+  const int = Math.floor(Math.random() * 2);
+
   return (
     <div>
-      <Hero img={Movies[Math.floor(Math.random() * 2)].backdrop_path}>
-        <Content>dadasdasd</Content>
+      <Hero img={Movies[int].backdrop_path}>
+        <Content>
+          <StudioImage src={Movies[int].poster_path} />
+        </Content>
       </Hero>
     </div>
   );
