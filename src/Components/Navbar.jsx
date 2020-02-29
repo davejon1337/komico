@@ -94,7 +94,11 @@ export default function Navbar() {
   };
 
   return (
-    <Nav style={{ backgroundColor: `${isAbove ? "black" : "transparent"}` }}>
+    <Nav
+      style={{
+        backgroundColor: `${isAbove ? "rgba(0,0,0,0.7)" : "transparent"}`
+      }}
+    >
       <NavTitleContainer>
         <NavTitle>KOMICO</NavTitle>
         <NavList>

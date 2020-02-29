@@ -6,87 +6,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Axios from "axios";
 import { useRef } from "react";
-
-const Hero = styled.div`
-  position : relative;
-  height: 90vh;
-  width: 100%;
-  background-image:  linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)) ,
-  url('${props => props.img}');
-  background-size: cover;
-
-
-  @media (max-width : 500px) {
-    
-  }
-
-`;
-
-const Content = styled.div`
-  padding-top: 40px;
-  padding-left: 7rem;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  font-family: "Montserrat", sans-serif;
-
-  @media (max-width: 500px) {
-    padding-left: 2rem;
-  }
-`;
-
-const StudioImage = styled.div`
-  height: 300px;
-  width: 250px;
-  background-image : url('${props => props.src}');
-  background-size: cover;
-  background-position : center center;
-`;
-
-const Title = styled.h1`
-  font-size: 6rem;
-  font-weight: 600;
-  font-family: "Lato", sans-serif;
-
-  @media (max-width: 500px) {
-    font-size: 3rem;
-  }
-`;
-
-const Tag = styled.h6`
-  font-size: 1.5rem;
-  font-weight: 600;
-`;
-
-const Info = styled.p`
-  margin-top: 10px;
-  font-weight: 300;
-  font-size: 1.2rem;
-  width: 30%;
-  @media (max-width: 500px) {
-    width: 100%;
-    font-size: 1rem;
-  }
-`;
-
-const Button = styled(Link)`
-  margin-top: 20px;
-  text-decoration: none;
-  background-color: white;
-  padding: 10px 20px;
-  color: #000;
-  width: 150px;
-  display: inline-block;
-  transition: all 0.3s;
-
-  &:hover {
-    transform: scale(1.1);
-    background-color: #000;
-    color: #fff;
-  }
-`;
+import Hero from "../Components/Hero";
+import Slider from "../Components/Slider";
+import MovieCard from "../Components/MovieCard";
 
 const Section = styled.section`
   margin-top: 30px;
@@ -97,59 +19,91 @@ const Heading = styled.h6`
   font-weight: 500;
   font-size: 1.3rem;
   margin: 20px 0;
+  padding-left: 20px;
 `;
 
-const Slider = styled.div`
-  position: relative;
-`;
+// const MovieCard = styled.div`
+//   height : 250px;
+//   width : 200px;
+//   background-image : url('${props => props.src}');
+//   background-size : cover;
+//   display : inline-block;
+//   margin-right   : 50px;
+//   transition : all 0.5s ease-in-out;
 
-const MovieCardContainer = styled.div`
-  white-space: nowrap;
-  overflow: scroll;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-`;
+//   &:hover {
+//    transform : scale(1.3);
+//     }
 
-const MovieCard = styled.div`
-  height : 250px;
-  width : 200px;
-  background-image : url('${props => props.src}');
-  background-size : cover;
-  display : inline-block;
-  margin-right   : 15px;
-  transition : all 0.5s ease-in-out;
+// `;
 
-  &:hover {
-   transform : scale(1.3);
-    }
+// const CardWrapper = styled.div`
+//   position: relative;
+//   height: 200px;
+//   width: 150px;
+//   display: inline-block;
+// `;
 
-  
-`;
+// const Card = styled.div`
+//   height: 100%;
+//   width: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   transition: all 0.5s;
 
-const NavigationButtonLeft = styled.i`
-  position: absolute;
-  height: 65%;
-  top: 45%;
-  left: 0;
-  cursor: pointer;
-  font-size: 3rem;
-`;
+//   &:hover {
+//     transform: scale(1.1);
+//     cursor: pointer;
+//   }
+// `;
 
-const NavigationButtonRight = styled.i`
-  position: absolute;
-  top: 45%;
-  left: 98%;
-  cursor: pointer;
-  font-size: 3rem;
-`;
+// const Img = styled.img`
+//   height: 150px;
+//   width: 100px;
+//   border-radius: 5px;
+// `;
+
+// const NormatText = styled.h3`
+//   margin-top: 10px;
+//   font-weight: 800;
+//   font-size: 0.9rem;
+// `;
+
+// const RatingContainer = styled.div`
+//   z-index: 4;
+//   position: absolute;
+//   top: 10%;
+//   left: 20%;
+//   display: flex;
+//   background-color: rgba(0, 0, 0, 0.7);
+//   padding: 2px;
+//   font-size: 0.7rem;
+//   font-family: "Lato", sans-serif;
+// `;
+
+// const Icon = styled.i`
+//   margin: auto 5px auto 0;
+// `;
+
+// const Rating = ({ rate }) => {
+//   return (
+//     <RatingContainer>
+//       <Icon className="fas fa-star"></Icon>
+//       <h3> {rate} </h3>
+//     </RatingContainer>
+//   );
+// };
 
 export default function HomePage() {
   // const int = Math.floor(Math.random() * 3);
 
   const movieCardContainerRef = useRef(0);
 
-  const int = 2;
   const [state, setState] = useState(null);
+  const [soon, setSoon] = useState(null);
+  const int = Math.floor(Math.random() * 20);
 
   useEffect(() => {
     const fetch = async () => {
@@ -159,52 +113,48 @@ export default function HomePage() {
       setState(res.data.results);
     };
     fetch();
+    const fetchIt = async () => {
+      const res = await Axios.get(
+        "https://api.themoviedb.org/3/movie/upcoming?api_key=fed0dc08aa09927ccddbc99c1f16e6c8"
+      );
+      setSoon(res.data.results);
+    };
+    fetchIt();
   }, []);
 
-  const handleClick = e => {
-    // console.log(movieCardContainerRef.current.scrollTop);
-    movieCardContainerRef.current.scrollLeft += 250;
-    // console.log(movieCardContainerRef.current.scrollTop);
-  };
-
-  const handleLeftNavigation = e => {
-    movieCardContainerRef.current.scrollLeft -= 250;
-  };
   return (
     <div>
-      <Hero img={Movies[int].backdrop_path}>
-        <Content>
-          <Title>{Movies[int].title.toUpperCase()}</Title>
-          <Tag>{Movies[int].tagline}</Tag>
-          <Info>{Movies[int].overview}</Info>
-          <Button>
-            <i
-              className="fas fa-info-circle"
-              style={{ marginRight: "10px" }}
-            ></i>{" "}
-            More Info
-          </Button>
-        </Content>
-      </Hero>
+      {state && (
+        <Hero
+          src={`https://image.tmdb.org/t/p/original${state[int].backdrop_path}`}
+          title={state[int].title}
+          overview={state[int].overview}
+          tagline={state[int].tagline}
+          height={90}
+        />
+      )}
       <Section>
         <Heading>TOP TRENDING</Heading>
         <Slider>
-          <NavigationButtonLeft
-            className="fas fa-chevron-left"
-            onClick={handleLeftNavigation}
-          ></NavigationButtonLeft>
-          <MovieCardContainer ref={movieCardContainerRef}>
-            {state &&
-              state.map(movie => (
-                <MovieCard
-                  src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                ></MovieCard>
-              ))}
-          </MovieCardContainer>
-          <NavigationButtonRight
-            className="fas fa-chevron-right"
-            onClick={handleClick}
-          ></NavigationButtonRight>
+          {state &&
+            state.map(movie => (
+              <MovieCard
+                image={movie.poster_path}
+                rating={movie.vote_average}
+                title={movie.title}
+              />
+            ))}
+        </Slider>
+      </Section>
+      <Section>
+        <Heading>UPCOMING</Heading>
+        <Slider>
+          {/* {soon &&
+            soon.map(movie => (
+              // <MovieCard
+              //   src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+              // ></MovieCard>
+            ))} */}
         </Slider>
       </Section>
     </div>
