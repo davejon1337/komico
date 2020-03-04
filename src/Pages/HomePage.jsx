@@ -1,14 +1,17 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { Movies } from "../Utils/Suggestions";
-import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import Axios from "axios";
-import { useRef } from "react";
 import Hero from "../Components/Hero";
 import Slider from "../Components/Slider";
 import MovieCard from "../Components/MovieCard";
+import {
+  fetchNowPlaying,
+  fetchUpcoming,
+  fetchTopRated
+} from "../Redux/actions/movieActions";
 
 const Section = styled.section`
   margin-top: 30px;
@@ -23,51 +26,47 @@ const Heading = styled.h6`
 `;
 
 export default function HomePage() {
-  // const int = Math.floor(Math.random() * 3);
+  const { now_playing, upcoming, top_rated } = useSelector(
+    state => state.movies
+  );
 
-  const movieCardContainerRef = useRef(0);
-
-  const [state, setState] = useState(null);
-  const [soon, setSoon] = useState(null);
-  const int = Math.floor(Math.random() * 20);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetch = async () => {
-      const res = await Axios.get(
-        "https://api.themoviedb.org/3/movie/top_rated?api_key=fed0dc08aa09927ccddbc99c1f16e6c8"
-      );
-      setState(res.data.results);
-    };
-    fetch();
-    const fetchIt = async () => {
-      const res = await Axios.get(
-        "https://api.themoviedb.org/3/movie/upcoming?api_key=fed0dc08aa09927ccddbc99c1f16e6c8"
-      );
-      setSoon(res.data.results);
-    };
-    fetchIt();
+    if (!now_playing) {
+      dispatch(fetchNowPlaying());
+    }
+    if (!upcoming) {
+      dispatch(fetchUpcoming());
+    }
+    if (!top_rated) {
+      dispatch(fetchTopRated());
+    }
   }, []);
 
   return (
     <div>
-      {state && (
+      {now_playing && (
         <Hero
-          src={`https://image.tmdb.org/t/p/original${state[int].backdrop_path}`}
-          title={state[int].title}
-          overview={state[int].overview}
-          tagline={state[int].tagline}
+          src={now_playing[1].backdrop_path}
+          title={now_playing[1].title}
+          overview={now_playing[1].overview}
+          tagline={now_playing[1].tagline}
           height={90}
+          landing
+          id={now_playing[1].id}
         />
       )}
       <Section>
-        <Heading>TOP TRENDING</Heading>
+        <Heading>NOW PLAYING</Heading>
         <Slider>
-          {state &&
-            state.map(movie => (
+          {now_playing &&
+            now_playing.map(movie => (
               <MovieCard
                 image={movie.poster_path}
                 rating={movie.vote_average}
                 title={movie.title}
+                id={movie.id}
               />
             ))}
         </Slider>
@@ -75,13 +74,28 @@ export default function HomePage() {
       <Section>
         <Heading>UPCOMING</Heading>
         <Slider>
-          {soon &&
-            soon.map(movie => (
+          {upcoming &&
+            upcoming.map(movie => (
               <MovieCard
                 image={movie.poster_path}
                 rating={movie.vote_average}
                 title={movie.title}
-              ></MovieCard>
+                id={movie.id}
+              />
+            ))}
+        </Slider>
+      </Section>
+      <Section>
+        <Heading>TOP RATED</Heading>
+        <Slider>
+          {top_rated &&
+            top_rated.map(movie => (
+              <MovieCard
+                image={movie.poster_path}
+                rating={movie.vote_average}
+                title={movie.title}
+                id={movie.id}
+              />
             ))}
         </Slider>
       </Section>

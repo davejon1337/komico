@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const CardWrapper = styled.div`
   position: relative;
@@ -51,6 +52,12 @@ const Icon = styled.i`
   margin: auto 5px auto 0;
 `;
 
+const CardLink = styled(Link)`
+  color: inherit;
+  font-size: inherit;
+  text-decoration: none;
+`;
+
 const Rating = ({ rate }) => {
   return (
     <RatingContainer>
@@ -60,13 +67,15 @@ const Rating = ({ rate }) => {
   );
 };
 
-export default function MovieCard({ image, title, rating }) {
+export default function MovieCard({ image, title, rating, id }) {
   return (
     <CardWrapper>
       <Card>
         <Img src={`https://image.tmdb.org/t/p/original${image}`} />
         <NormatText title={title}>
-          {title.length > 10 ? `${title.slice(0, 10) + "..."}` : title}
+          <CardLink to={`/movie/${id}`}>
+            {title.length > 10 ? `${title.slice(0, 10) + "..."}` : title}
+          </CardLink>
         </NormatText>
         <Rating rate={rating} />
       </Card>

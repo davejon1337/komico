@@ -8,7 +8,7 @@ const StyledDiv = styled.div`
   height: ${props => props.height}vh;
   width: 100%;
   background-image:  linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)) ,
-  url('${props => props.img}');
+  url('https://image.tmdb.org/t/p/original${props => props.img}');
   background-size: cover;
 
   @media (max-width : 500px) {
@@ -75,17 +75,30 @@ const Button = styled(Link)`
   }
 `;
 
-export default function Hero({ src, height, title, tagline, overview }) {
+export default function Hero({
+  src,
+  height,
+  title,
+  tagline,
+  overview,
+  landing,
+  id
+}) {
   return (
     <StyledDiv img={src} height={height}>
       <Content>
         <Title>{title.toUpperCase()}</Title>
         <Tag>{tagline}</Tag>
         <Info>{overview}</Info>
-        <Button>
-          <i className="fas fa-info-circle" style={{ marginRight: "10px" }}></i>{" "}
-          More Info
-        </Button>
+        {landing && (
+          <Button to={`/movie/${id}`}>
+            <i
+              className="fas fa-info-circle"
+              style={{ marginRight: "10px" }}
+            ></i>{" "}
+            More Info
+          </Button>
+        )}
       </Content>
     </StyledDiv>
   );
